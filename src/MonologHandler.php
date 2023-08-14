@@ -3,6 +3,7 @@
 namespace Airbrake;
 
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 /**
  * Monolog handler that sends logs to Airbrake.
@@ -28,24 +29,25 @@ class MonologHandler extends \Monolog\Handler\AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
-        if (isset($record['context']['exception'])) {
-            $exc = $record['context']['exception'];
+        $recordArray = $record->toArray();
+        if (isset($recordArray['context']['exception'])) {
+            $exc = $recordArray['context']['exception'];
             $trace = $exc->getTrace();
         } else {
             $trace = array_slice(debug_backtrace(), 3);
-            $exc = new Errors\Base($record['message'], $trace);
+            $exc = new Errors\Base($recordArray['message'], $trace);
         }
 
         $notice = $this->notifier->buildNotice($exc);
-        $notice['errors'][0]['type'] = $record['channel'].'.'.$record['level_name'];
-        $notice['context']['severity'] = $record['level_name'];
-        if (!empty($record['context'])) {
-            $notice['params']['monolog_context'] = $record['context'];
+        $notice['errors'][0]['type'] = $recordArray['channel'].'.'.$recordArray['level_name'];
+        $notice['context']['severity'] = $recordArray['level_name'];
+        if (!empty($recordArray['context'])) {
+            $notice['params']['monolog_context'] = $recordArray['context'];
         }
-        if (!empty($record['extra'])) {
-            $notice['params']['monolog_extra'] = $record['extra'];
+        if (!empty($recordArray['extra'])) {
+            $notice['params']['monolog_extra'] = $recordArray['extra'];
         }
 
         $this->notifier->sendNotice($notice);
