@@ -1,5 +1,5 @@
 {
-  "name": "airbrake/phpbrake",
+  "name": "coamw2/phpbrake",
   "description": "Airbrake exception and error notifier for PHP",
   "keywords": [
     "airbrake",
