@@ -11,7 +11,7 @@
   "homepage": "https://airbrake.io",
   "license": "MIT",
   "require": {
-    "php": ">=8.0",
+    "php": ">=8.1",
     "guzzlehttp/guzzle": ">=6.3",
     "cash/lrucache": "^1.0"
   },
@@ -32,11 +32,6 @@
   "autoload-dev": {
     "psr-4": {
       "Airbrake\\Tests\\": "tests/"
-    }
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "1.0-dev"
     }
   },
   "minimum-stability": "stable",
